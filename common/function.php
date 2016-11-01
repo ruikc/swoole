@@ -4,7 +4,11 @@
 */
 function route ($path_info, $request, $response) {
 
+    if( strpos($path_info,'.ico') !== false){
+        return;
+    }
     $pathar = explode('/', $path_info);
+
     $class = null;
     if (count($pathar) == 4) {
         list(, $na, $cl, $fu) = $pathar;
@@ -17,9 +21,7 @@ function route ($path_info, $request, $response) {
     $namespace = ucfirst($na);
     $classname = ucfirst($cl);
     $classpath = __DIR__ . "/../app/" . $namespace . '/' . $classname . '.php';
-//    return  $classpath;
     $corepath = __DIR__ . "/../core/Core.php";
-//    return $corepath;
     //加载核心文件
     include_once($corepath);
     if (is_file($classpath)) {
