@@ -1,0 +1,14 @@
+{
+    "name": "yuzhiyuan/swoole",
+    "authors": [
+        {
+            "name": "于志远",
+            "email": "lhyfe1987@163.com"
+        }
+    ],
+    "require": {
+        "joshcam/mysqli-database-class": "dev-master",
+        "league/oauth2-server": "~4.1",
+	    "predis/predis": "1.1.*@dev"
+    }
+}
