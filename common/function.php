@@ -43,4 +43,19 @@ function route ($path_info, $request, $response) {
 }
 
 
+/**
+ * 返回当前url的域名及商品
+ * @name: get_host
+ * @author: rickeryu <zhiyuanyu@gridinfo.com.cn>
+ * @time:15/2/5 14:36
+ */
+function get_host(){
+    $host = C('LOCAL_HOST');
+    if(empty($host)){
+        $host      =  'http://'.$_SERVER['HTTP_HOST'].$_SERVER['HTTP_PORT'];
+    }
+    return $host;
+}
+
+
 ?>

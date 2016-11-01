@@ -31,8 +31,6 @@ class Core
         $this->_get = isset($request->get) ? $request->get : [];
         $this->_post = isset($request->post) ? $request->post : [];
         $this->response = $response;
-        //加载
-//		$this->load_files();
 
         //实例化mysql数据库
         if (count($this->config['mysql'])) {
@@ -53,11 +51,11 @@ class Core
      * @author: rickeryu <lhyfe1987@163.com>
      * @time: 2016/11/1 下午2:41
      */
-    protected function get ($key = '') {
+    protected function get ($key = '',$default='') {
         if (!$key) {
             return $this->_get;
         }
-        return $this->isisset($this->_get[$key],null);
+        return $this->isisset($this->_get[$key],$default);
     }
 
     /**
@@ -68,8 +66,22 @@ class Core
      * @author: rickeryu <lhyfe1987@163.com>
      * @time: 2016/11/1 下午2:41
      */
-    protected function post ($key) {
-        return $this->isisset($this->_post[$key],null);
+    protected function post ($key,$default='') {
+        return $this->isisset($this->_post[$key],$default);
+    }
+
+    /**
+     * 返回request方式的数据
+     * @name: request
+     * @return array
+     * @author: rickeryu <lhyfe1987@163.com>
+     * @time: 2016/11/1 下午6:21
+     */
+    protected function request(){
+
+        $get = $this->isisset($this->get(),[]);
+        $post = $this->isisset($this->post(),[]);
+        return array_merge($get,$post);
     }
 
     /**
@@ -114,6 +126,46 @@ class Core
      */
     protected function isisset($val,$default=''){
         return isset($val) ? $val : $default;
+    }
+
+
+    /**
+     * 得到缓存key
+     * @name: getCacheKey
+     * @param $table
+     * @param $map
+     * @param string $field
+     * @param string $order
+     * @return string
+     * @author: rickeryu <lhyfe1987@163.com>
+     * @time: 2016/11/1 下午5:07
+     */
+    protected function getCacheKey ($map, $field = '', $order = '') {
+        $p = $this->get('p', 1);
+        $page =$this->get('size', 10);
+        $tmp = '';
+        ksort($map);
+        foreach ($map as $key => $val) {
+            $tmp .= '_' . $key . '_' . serialize($val);
+        }
+        $tmp .= '_' . str_replace(',', '_', $field);
+        $tmp .= '_' . str_replace(' ', '_', str_replace(',', '_', $order));
+        $tmp .= '_p_' . $p . '_size_' . $page;
+        $str = $this->getPreCacheKey($model . $tmp);
+        return $str . '_' . $table;
+    }
+
+    /**
+     * 得到缓存前缀
+     * @name: getPreCacheKey
+     * @param string $str
+     * @return string
+     * @author: rickeryu <lhyfe1987@163.com>
+     * @time: 2016/11/1 下午5:07
+     */
+    protected function getPreCacheKey ($str = '') {
+        $host = get_host();
+        return md5($host . '_' . $str);
     }
 
 
